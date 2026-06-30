@@ -1,0 +1,1974 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>자람 — 서일태의 이야기</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;500;600&family=Noto+Sans+KR:wght@300;400;500&display=swap" rel="stylesheet">
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyBlhwLI_rv-2tOgnyK7KeiZA7d0eal4wMk",
+  authDomain: "jaram-autobiography.firebaseapp.com",
+  databaseURL: "https://jaram-autobiography-default-rtdb.firebaseio.com",
+  projectId: "jaram-autobiography",
+  storageBucket: "jaram-autobiography.firebasestorage.app",
+  messagingSenderId: "1064533322705",
+  appId: "1:1064533322705:web:ed7943ea5c9a94529b0ef0"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+const ANSWERS_REF = db.ref('jaram/answers');
+</script>
+<style>
+:root {
+  --bg: #EFE7D6;
+  --bg-card: #F7F2EA;
+  --green: #7E8F62;
+  --green-light: #B4C49A;
+  --green-pale: #E8EDE0;
+  --brown: #6B4226;
+  --brown-mid: #8B5E34;
+  --brown-light: #C4956A;
+  --text: #2C1F0E;
+  --text-mid: #5C4030;
+  --text-muted: #9A8070;
+  --border: #D8CABA;
+  --white: #FDFAF5;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Noto Sans KR', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.screen { display: none; min-height: 100vh; }
+.screen.active { display: flex; flex-direction: column; }
+.serif { font-family: 'Noto Serif KR', serif; }
+
+/* ══════════════════════════════
+   스플래시
+══════════════════════════════ */
+.splash-screen {
+  background: var(--bg);
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  cursor: pointer;
+}
+
+.splash-text {
+  font-family: 'Noto Serif KR', serif;
+  font-size: clamp(1.1rem, 3.5vw, 1.5rem);
+  color: var(--brown);
+  font-weight: 300;
+  letter-spacing: 0.04rem;
+  line-height: 2.1;
+  text-align: center;
+  max-width: 500px;
+  padding: 0 2rem;
+  min-height: 3em;
+  white-space: pre-line;
+}
+
+.splash-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1.2em;
+  background: var(--brown-light);
+  margin-left: 2px;
+  vertical-align: middle;
+  animation: blink 0.8s step-end infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.splash-skip {
+  position: absolute;
+  bottom: 2rem;
+  right: 2rem;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  letter-spacing: 0.1rem;
+  opacity: 0.5;
+}
+
+.splash-progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  background: var(--green);
+  opacity: 0.4;
+  transition: none;
+}
+
+/* ══════════════════════════════
+   표지
+══════════════════════════════ */
+#screen-cover {
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  padding: 2rem;
+}
+
+.cover-ring {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.cover-content {
+  position: relative;
+  z-index: 10;
+  text-align: center;
+  max-width: 400px;
+  width: 100%;
+}
+
+/* 스플래시 텍스트 */
+.cover-splash {
+  margin-bottom: 2rem;
+}
+
+.cover-splash-1 {
+  font-family: 'Noto Serif KR', serif;
+  font-size: clamp(0.75rem, 2.2vw, 0.88rem);
+  color: var(--text-muted);
+  line-height: 1.9;
+  font-weight: 300;
+  letter-spacing: 0.02rem;
+  margin-bottom: 0.4rem;
+}
+
+.cover-splash-2 {
+  font-family: 'Noto Serif KR', serif;
+  font-size: clamp(0.8rem, 2.4vw, 0.92rem);
+  color: var(--text-mid);
+  line-height: 1.9;
+  font-weight: 300;
+  letter-spacing: 0.02rem;
+}
+
+.cover-divider {
+  width: 36px;
+  height: 1px;
+  background: var(--green);
+  margin: 0 auto 1.8rem;
+  opacity: 0.5;
+}
+
+.cover-headline {
+  font-family: 'Noto Serif KR', serif;
+  font-size: clamp(1.3rem, 4vw, 1.7rem);
+  color: var(--green);
+  letter-spacing: 0.08rem;
+  margin-bottom: 1.2rem;
+  font-weight: 400;
+}
+
+.cover-body {
+  font-family: 'Noto Serif KR', serif;
+  font-size: clamp(0.85rem, 2.4vw, 0.95rem);
+  color: var(--text-mid);
+  line-height: 2.1;
+  font-weight: 300;
+  margin-bottom: 1.5rem;
+  white-space: pre-line;
+}
+
+.cover-title {
+  font-family: 'Noto Serif KR', serif;
+  font-size: clamp(0.85rem, 2.4vw, 0.95rem);
+  font-weight: 600;
+  color: var(--text-mid);
+  letter-spacing: 0.15rem;
+  line-height: 1;
+  margin-bottom: 2.5rem;
+}
+
+.btn-enter {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 1rem 2.4rem;
+  background: var(--brown);
+  color: var(--white);
+  border: none;
+  border-radius: 2px;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 1rem;
+  font-weight: 400;
+  letter-spacing: 0.08rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-enter:hover { background: var(--brown-mid); }
+
+.cover-quote {
+  position: absolute;
+  bottom: 2.5rem;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-family: 'Noto Serif KR', serif;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  letter-spacing: 0.05rem;
+  font-weight: 300;
+  line-height: 1.8;
+}
+
+/* ══════════════════════════════
+   목차
+══════════════════════════════ */
+#screen-chapters { background: var(--bg); }
+
+.chapters-header {
+  padding: 1.5rem 1.5rem 0;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.btn-back {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-muted);
+  font-size: 1.2rem;
+  padding: 0.3rem;
+  line-height: 1;
+  transition: color 0.2s;
+}
+
+.btn-back:hover { color: var(--brown); }
+
+.chapters-header-title {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 1.1rem;
+  color: var(--brown);
+  font-weight: 400;
+  letter-spacing: 0.1rem;
+  flex: 1;
+}
+
+.chapters-total {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.chapters-content {
+  flex: 1;
+  padding: 1.5rem;
+  max-width: 600px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.chapters-intro {
+  margin-bottom: 2rem;
+}
+
+.chapters-intro h2 {
+  font-family: 'Noto Serif KR', serif;
+  font-size: clamp(1.3rem, 5vw, 1.7rem);
+  color: var(--brown);
+  font-weight: 400;
+  line-height: 1.5;
+  margin-bottom: 0.5rem;
+}
+
+.chapters-intro p {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  line-height: 1.8;
+}
+
+.chapter-list { display: flex; flex-direction: column; gap: 0.8rem; }
+
+.chapter-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1.2rem 1.4rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.chapter-card:hover {
+  border-color: var(--green);
+  background: var(--white);
+  transform: translateX(4px);
+}
+
+.chapter-card.done { border-color: var(--green-light); }
+
+.chapter-num {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 1.4rem;
+  color: var(--green-light);
+  font-weight: 300;
+  min-width: 2rem;
+  line-height: 1;
+  padding-top: 0.2rem;
+}
+
+.chapter-card.done .chapter-num { color: var(--green); }
+
+.chapter-info { flex: 1 }
+
+.chapter-sub {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  letter-spacing: 0.1rem;
+  margin-bottom: 0.2rem;
+}
+
+.chapter-title-text {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 1rem;
+  color: var(--text);
+  font-weight: 400;
+  margin-bottom: 0.3rem;
+}
+
+/* 목차 한 줄 설명 */
+.chapter-desc {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.chapter-progress-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.4rem;
+  min-width: 52px;
+  padding-top: 0.2rem;
+}
+
+.chapter-progress-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.chapter-progress-bar {
+  width: 44px;
+  height: 3px;
+  background: var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.chapter-progress-fill {
+  height: 100%;
+  background: var(--green);
+  border-radius: 2px;
+  transition: width 0.4s;
+}
+
+.chapters-actions {
+  margin-top: 2rem;
+  display: flex;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+}
+
+.btn-secondary {
+  padding: 0.8rem 1.2rem;
+  border: 1.5px solid var(--border);
+  background: transparent;
+  border-radius: 2px;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 0.85rem;
+  color: var(--text-mid);
+  cursor: pointer;
+  transition: all 0.2s;
+  letter-spacing: 0.02rem;
+}
+
+.btn-secondary:hover {
+  border-color: var(--brown-light);
+  color: var(--brown);
+}
+
+/* ══════════════════════════════
+   챕터 인트로
+══════════════════════════════ */
+.chapter-intro-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  z-index: 300;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.chapter-intro-overlay.open { display: flex; }
+
+.chapter-intro-box {
+  max-width: 400px;
+  width: 100%;
+  text-align: center;
+}
+
+.chapter-intro-num {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 3rem;
+  color: var(--green-light);
+  font-weight: 300;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.chapter-intro-sub {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  letter-spacing: 0.15rem;
+  margin-bottom: 0.4rem;
+}
+
+.chapter-intro-title {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 1.6rem;
+  color: var(--brown);
+  font-weight: 400;
+  margin-bottom: 2rem;
+}
+
+.chapter-intro-divider {
+  width: 36px;
+  height: 1px;
+  background: var(--green);
+  margin: 0 auto 1.8rem;
+  opacity: 0.5;
+}
+
+.chapter-intro-text {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 1rem;
+  color: var(--text-mid);
+  line-height: 2;
+  font-weight: 300;
+  margin-bottom: 3rem;
+  white-space: pre-line;
+}
+
+.btn-intro-start {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.9rem 2.2rem;
+  background: var(--brown);
+  color: var(--white);
+  border: none;
+  border-radius: 2px;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-intro-start:hover { background: var(--brown-mid); }
+
+/* ══════════════════════════════
+   질문
+══════════════════════════════ */
+#screen-question { background: var(--bg); }
+
+.question-header {
+  padding: 1.2rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.question-chapter-label {
+  flex: 1;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  letter-spacing: 0.03rem;
+}
+
+.question-counter {
+  font-size: 0.8rem;
+  color: var(--green);
+  font-family: 'Noto Serif KR', serif;
+}
+
+.question-content {
+  flex: 1;
+  padding: 2rem 1.5rem;
+  max-width: 640px;
+  margin: 0 auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.question-progress-bar {
+  height: 2px;
+  background: var(--border);
+  border-radius: 1px;
+  margin-bottom: 2.5rem;
+  overflow: hidden;
+}
+
+.question-progress-fill {
+  height: 100%;
+  background: var(--green);
+  border-radius: 1px;
+  transition: width 0.4s;
+}
+
+.question-text {
+  font-family: 'Noto Serif KR', serif;
+  font-size: clamp(1.2rem, 4vw, 1.5rem);
+  color: var(--brown);
+  line-height: 1.9;
+  font-weight: 400;
+  margin-bottom: 1rem;
+  white-space: pre-line;
+}
+
+/* 수정된 힌트 영역 */
+.question-hint-wrap {
+  margin-bottom: 1.5rem;
+}
+
+.question-hint {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.7;
+  padding-left: 0.8rem;
+  border-left: 2px solid var(--green-light);
+  font-style: italic;
+  opacity: 0.85;
+  margin-top: 0.4rem;
+}
+
+.question-hint-note {
+  font-size: 0.78rem;
+  color: var(--green);
+  line-height: 1.7;
+  margin-bottom: 0.4rem;
+}
+
+.answer-wrap {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.answer-textarea {
+  width: 100%;
+  min-height: 240px;
+  flex: 1;
+  padding: 1.3rem;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 1.1rem;
+  line-height: 2;
+  color: var(--text);
+  resize: none;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.answer-textarea:focus { border-color: var(--brown-light); }
+
+.answer-textarea::placeholder {
+  color: #C0B0A0;
+  font-size: 0.95rem;
+  line-height: 1.9;
+}
+
+.answer-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 0.6rem;
+}
+
+.save-dot {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.78rem;
+  color: var(--green);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.save-dot.show { opacity: 1; }
+.save-dot::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--green);
+  flex-shrink: 0;
+}
+
+.char-count {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.question-nav {
+  display: flex;
+  gap: 0.8rem;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+}
+
+.btn-nav {
+  flex: 1;
+  padding: 1rem;
+  border: 1.5px solid var(--border);
+  background: transparent;
+  border-radius: 2px;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 0.9rem;
+  color: var(--text-mid);
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.btn-nav:hover:not(:disabled) {
+  border-color: var(--brown-light);
+  color: var(--brown);
+}
+
+.btn-nav:disabled { opacity: 0.3; cursor: default; }
+
+.btn-nav-primary {
+  background: var(--brown);
+  border-color: var(--brown);
+  color: var(--white);
+}
+
+.btn-nav-primary:hover:not(:disabled) {
+  background: var(--brown-mid);
+  border-color: var(--brown-mid);
+  color: var(--white);
+}
+
+.btn-nav-done {
+  background: var(--green);
+  border-color: var(--green);
+  color: var(--white);
+}
+
+.btn-nav-done:hover:not(:disabled) {
+  background: #6a7a52;
+  border-color: #6a7a52;
+  color: var(--white);
+}
+
+/* 미디어 업로드 */
+.media-section {
+  margin-top: 1.2rem;
+  border-top: 1px dashed var(--border);
+  padding-top: 1rem;
+}
+
+.media-label {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-bottom: 0.7rem;
+}
+
+.media-body {
+  display: block;
+}
+
+.media-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 0.6rem;
+  margin-bottom: 0.7rem;
+}
+
+.media-thumb {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: 4px;
+  overflow: hidden;
+  background: var(--bg);
+  border: 1px solid var(--border);
+}
+
+.media-thumb img, .media-thumb video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.media-thumb .media-del {
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  background: rgba(0,0,0,0.55);
+  border: none;
+  color: #fff;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 0.7rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.media-thumb:hover .media-del { opacity: 1; }
+
+.media-add-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.6rem 1rem;
+  border: 1.5px dashed var(--border);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.2s;
+  width: 100%;
+}
+
+.media-add-btn:hover { border-color: var(--brown-light); color: var(--brown-light); }
+
+.media-note {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  margin-top: 0.5rem;
+  opacity: 0.65;
+}
+
+/* ══════════════════════════════
+   모아보기
+══════════════════════════════ */
+#screen-view { background: var(--bg); }
+
+.view-header {
+  padding: 1.2rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.view-header-title {
+  flex: 1;
+  font-family: 'Noto Serif KR', serif;
+  font-size: 1rem;
+  color: var(--brown);
+  font-weight: 400;
+}
+
+.view-content {
+  flex: 1;
+  max-width: 680px;
+  margin: 0 auto;
+  width: 100%;
+  padding: 2rem 1.5rem;
+}
+
+.view-title-block {
+  text-align: center;
+  margin-bottom: 2.5rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.view-title-block h1 {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 2.5rem;
+  color: var(--brown);
+  font-weight: 300;
+  letter-spacing: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.view-title-block p {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  font-weight: 300;
+}
+
+/* 보기 토글 */
+.view-toggle {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 0.4rem;
+}
+
+.view-toggle-btn {
+  flex: 1;
+  padding: 0.6rem;
+  border: none;
+  background: transparent;
+  border-radius: 2px;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.view-toggle-btn.active {
+  background: var(--white);
+  color: var(--brown);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+
+.view-chapter { margin-bottom: 3rem; }
+
+.view-chapter-header {
+  display: flex;
+  align-items: baseline;
+  gap: 0.8rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.8rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.view-chapter-num {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 1.5rem;
+  color: var(--green-light);
+  font-weight: 300;
+}
+
+.view-chapter-title {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 1.1rem;
+  color: var(--brown);
+  font-weight: 400;
+}
+
+.view-qa { margin-bottom: 2rem; }
+
+.view-question {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  margin-bottom: 0.5rem;
+  line-height: 1.6;
+}
+
+.view-answer {
+  font-size: 1.05rem;
+  color: var(--text);
+  line-height: 2;
+  white-space: pre-wrap;
+}
+
+.view-empty {
+  color: #C8B8A8;
+  font-size: 0.82rem;
+  font-style: italic;
+}
+
+.view-images {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.8rem;
+}
+
+.view-img {
+  width: 90px;
+  height: 90px;
+  object-fit: cover;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+}
+
+.btn-view-edit {
+  display: inline-block;
+  margin-top: 0.6rem;
+  padding: 0.3rem 0.8rem;
+  border: 1px solid var(--border);
+  background: transparent;
+  border-radius: 2px;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-view-edit:hover {
+  border-color: var(--brown-light);
+  color: var(--brown);
+}
+
+.view-actions {
+  display: flex;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+  padding: 1.2rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+}
+
+.btn-action {
+  flex: 1;
+  min-width: 130px;
+  padding: 0.85rem 1rem;
+  border: 1.5px solid var(--border);
+  background: var(--white);
+  border-radius: 2px;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 0.85rem;
+  color: var(--text-mid);
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+}
+
+.btn-action:hover { border-color: var(--brown-light); color: var(--brown); }
+
+/* ══════════════════════════════
+   챕터 완료 팝업
+══════════════════════════════ */
+.complete-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(239,231,214,0.94);
+  z-index: 200;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.complete-overlay.open { display: flex; }
+
+.complete-box { text-align: center; max-width: 320px; }
+
+.complete-icon {
+  width: 60px;
+  height: 60px;
+  margin: 0 auto 1.5rem;
+}
+
+.complete-box h2 {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 1.4rem;
+  color: var(--brown);
+  font-weight: 400;
+  margin-bottom: 0.6rem;
+}
+
+.complete-box p {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  line-height: 1.8;
+  margin-bottom: 2rem;
+  white-space: pre-line;
+}
+
+.complete-actions { display: flex; gap: 0.8rem; }
+
+.complete-actions button {
+  flex: 1;
+  padding: 0.9rem;
+  border-radius: 2px;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  border: 1.5px solid var(--border);
+  background: transparent;
+  color: var(--text-mid);
+}
+
+.complete-actions button.primary {
+  background: var(--brown);
+  border-color: var(--brown);
+  color: var(--white);
+}
+
+.complete-actions button:hover { opacity: 0.82; }
+
+/* ══════════════════════════════
+   토스트
+══════════════════════════════ */
+#toast {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.9);
+  background: rgba(44, 31, 14, 0.88);
+  color: var(--white);
+  padding: 1rem 1.8rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  z-index: 999;
+  transition: transform 0.25s, opacity 0.25s;
+  opacity: 0;
+  pointer-events: none;
+  max-width: 80vw;
+  text-align: center;
+  line-height: 1.9;
+  white-space: pre-line;
+  backdrop-filter: blur(4px);
+}
+
+#toast.show {
+  transform: translate(-50%, -50%) scale(1);
+  opacity: 1;
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+/* ══════════════════════════════
+   반응형
+══════════════════════════════ */
+@media (max-width: 480px) {
+  .chapters-actions { flex-direction: column; }
+  .btn-action { min-width: unset; }
+  .complete-actions { flex-direction: column; }
+  .view-toggle { flex-direction: column; }
+  .answer-textarea { font-size: 1.05rem; min-height: 200px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── 스플래시 1 ── -->
+<div id="screen-splash1" class="screen splash-screen active" onclick="skipSplash()">
+  <p class="splash-text"><span id="splash1-text"></span><span class="splash-cursor" id="splash1-cursor"></span></p>
+  <div class="splash-progress" id="splash1-progress"></div>
+  <span class="splash-skip">탭하면 건너뜁니다</span>
+</div>
+
+<!-- ── 스플래시 2 ── -->
+<div id="screen-splash2" class="screen splash-screen" onclick="skipSplash()">
+  <p class="splash-text"><span id="splash2-text"></span><span class="splash-cursor" id="splash2-cursor"></span></p>
+  <div class="splash-progress" id="splash2-progress"></div>
+  <span class="splash-skip">탭하면 건너뜁니다</span>
+</div>
+
+<!-- ── 표지 ── -->
+<div id="screen-cover" class="screen active">
+  <svg class="cover-ring" viewBox="0 0 800 900" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+    <g fill="none" stroke="#7E8F62" stroke-linecap="round">
+      <path d="M-60,820 Q80,700 200,650 Q340,590 430,520 Q520,440 560,360 Q590,280 570,200" stroke-width="0.8" opacity="0.12"/>
+      <path d="M-80,860 Q70,730 210,670 Q360,600 460,520 Q560,430 600,340 Q640,250 615,155" stroke-width="0.9" opacity="0.15"/>
+      <path d="M-40,780 Q100,670 230,610 Q380,540 470,460 Q560,370 580,280 Q600,200 575,120" stroke-width="1.0" opacity="0.18"/>
+      <path d="M-100,900 Q60,760 200,700 Q360,630 470,545 Q580,450 620,360 Q660,270 635,170" stroke-width="1.1" opacity="0.14"/>
+      <path d="M-20,740 Q120,640 270,580 Q420,510 510,430 Q600,340 615,250 Q628,170 600,90" stroke-width="1.2" opacity="0.20"/>
+      <path d="M-130,940 Q40,790 190,730 Q360,655 480,565 Q600,465 640,370 Q678,275 650,170" stroke-width="1.3" opacity="0.12"/>
+      <path d="M20,700 Q150,600 300,545 Q460,475 550,395 Q640,305 650,215 Q660,130 630,55" stroke-width="1.5" opacity="0.22"/>
+      <path d="M-160,980 Q20,820 180,755 Q360,675 490,580 Q620,475 660,375 Q698,278 668,168" stroke-width="1.6" opacity="0.10"/>
+      <path d="M60,660 Q180,570 335,515 Q500,445 590,360 Q678,268 682,178 Q688,95 655,20" stroke-width="1.8" opacity="0.18"/>
+      <path d="M100,620 Q220,540 375,485 Q545,415 635,325 Q718,232 718,142 Q720,62 684,-10" stroke-width="2.0" opacity="0.15"/>
+      <path d="M150,580 Q265,505 420,450 Q595,380 685,288 Q762,196 758,108 Q756,30 716,-42" stroke-width="2.2" opacity="0.12"/>
+      <path d="M210,545 Q320,475 472,420 Q648,348 736,254 Q808,162 800,74 Q794,0 752,-72" stroke-width="2.5" opacity="0.10"/>
+    </g>
+  </svg>
+
+  <div class="cover-content">
+    <div class="cover-divider"></div>
+
+    <p class="cover-headline serif">70년의 자람</p>
+
+    <p class="cover-body">살아보니 그렇습니다.
+좋은 날은 나를 웃게 했고,
+힘든 날은 나를 조금 더 깊게 했습니다.
+
+한 해 한 해 겹친 나이테를 따라,
+서일태의 지나온 시간을 한 권의 이야기로 남깁니다.</p>
+
+    <button class="btn-enter" onclick="goChapters()">
+      천천히 시작하기 →
+    </button>
+  </div>
+</div>
+
+<!-- ── 목차 ── -->
+<div id="screen-chapters" class="screen">
+  <div class="chapters-header">
+    <button class="btn-back" onclick="goScreen('cover')">←</button>
+    <span class="chapters-header-title serif">자람</span>
+    <span class="chapters-total" id="total-progress"></span>
+  </div>
+
+  <div class="chapters-content">
+    <div class="chapters-intro">
+      <h2 class="serif">어디서부터 시작할까요?</h2>
+      <p>순서대로 안 하셔도 돼요. 마음이 끌리는 챕터부터 편하게 시작해보세요.</p>
+    </div>
+
+    <div class="chapter-list" id="chapter-list"></div>
+
+    <div class="chapters-actions">
+      <button class="btn-secondary" onclick="goView()">지금까지 쓴 이야기 보기</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── 챕터 인트로 ── -->
+<div class="chapter-intro-overlay" id="chapter-intro-overlay">
+  <div class="chapter-intro-box">
+    <span class="chapter-intro-num serif" id="intro-num"></span>
+    <p class="chapter-intro-sub" id="intro-sub"></p>
+    <h2 class="chapter-intro-title serif" id="intro-title"></h2>
+    <div class="chapter-intro-divider"></div>
+    <p class="chapter-intro-text serif" id="intro-text"></p>
+    <button class="btn-intro-start" id="intro-start-btn">첫 번째 질문으로 →</button>
+  </div>
+</div>
+
+<!-- ── 질문 ── -->
+<div id="screen-question" class="screen">
+  <div class="question-header">
+    <button class="btn-back" onclick="goChapters()">←</button>
+    <span class="question-chapter-label" id="q-chapter-label"></span>
+    <span class="question-counter" id="q-counter"></span>
+  </div>
+
+  <div class="question-content">
+    <div class="question-progress-bar">
+      <div class="question-progress-fill" id="q-progress-fill"></div>
+    </div>
+    <p class="question-text serif" id="q-text"></p>
+    <div class="question-hint-wrap">
+      <p class="question-hint-note">아래 문장은 기억을 떠올리기 쉽게 적어둔 예시입니다.<br>아버님의 말투와 기억 그대로가 가장 좋습니다.</p>
+      <p class="question-hint" id="q-hint"></p>
+    </div>
+    <div class="answer-wrap">
+      <textarea class="answer-textarea" id="q-answer"
+        placeholder="생각나는 만큼만 적어주세요. 짧아도 괜찮습니다."
+        oninput="onAnswerInput()"
+        rows="8"></textarea>
+      <div class="answer-meta">
+        <span class="save-dot" id="save-dot">방금 쓰신 내용이 저장되었습니다</span>
+        <span class="char-count" id="char-count">0자</span>
+      </div>
+    </div>
+    <!-- 미디어 업로드 -->
+    <div class="media-section">
+      <p class="media-label">이미지 첨부하기</p>
+      <p class="media-label" style="opacity:0.6; margin-top: -0.3rem;">혹시 생각나는 느낌이나 기억이 있나요?<br>있다면 자유롭게 붙여보세요.</p>
+      <div class="media-body" id="media-body">
+        <div class="media-grid" id="media-grid"></div>
+        <button class="media-add-btn" onclick="document.getElementById('media-file-input').click()">
+          📎 파일 선택하기
+        </button>
+        <input type="file" id="media-file-input" accept="image/*" multiple style="display:none" onchange="handleMediaUpload(event)">
+        <p class="media-note">· 사진은 저장됩니다</p>
+      </div>
+    </div>
+
+    <div class="question-nav">
+      <button class="btn-nav" id="btn-prev" onclick="prevQuestion()">← 이전</button>
+      <button class="btn-nav btn-nav-primary" id="btn-next" onclick="nextQuestion()">다음 →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── 모아보기 ── -->
+<div id="screen-view" class="screen">
+  <div class="view-header">
+    <button class="btn-back" onclick="goChapters()">←</button>
+    <span class="view-header-title serif">지금까지 쓴 이야기</span>
+  </div>
+  <div class="view-content">
+    <div class="view-actions">
+      <button class="btn-action" onclick="exportTxt()">📄 글 파일로 저장하기</button>
+      <button class="btn-action" onclick="copyAll()">📋 전체 내용 복사하기</button>
+      <button class="btn-action" onclick="printView()">🖨️ 인쇄하기</button>
+    </div>
+    <div class="view-title-block">
+      <h1 class="serif">자람</h1>
+      <p class="serif">푸름을 먹고 자란, 서일태의 시간</p>
+    </div>
+    <div class="view-toggle">
+      <button class="view-toggle-btn active" id="toggle-written" onclick="setViewMode('written')">작성한 이야기만 보기</button>
+      <button class="view-toggle-btn" id="toggle-all" onclick="setViewMode('all')">모든 질문 보기</button>
+    </div>
+    <div id="view-body"></div>
+  </div>
+</div>
+
+<!-- ── 챕터 완료 팝업 ── -->
+<div class="complete-overlay" id="complete-overlay">
+  <div class="complete-box">
+    <svg class="complete-icon" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="30" cy="30" r="28" stroke="#7E8F62" stroke-width="1.5" stroke-dasharray="4 2"/>
+      <path d="M18 30 Q24 38 30 35 Q38 30 44 22" stroke="#6B4226" stroke-width="2" stroke-linecap="round" fill="none"/>
+    </svg>
+    <h2 class="serif" id="complete-title"></h2>
+    <p id="complete-desc"></p>
+    <div class="complete-actions">
+      <button onclick="closeComplete(); goChapters();">목차로 돌아가기</button>
+      <button class="primary" id="complete-next-btn"></button>
+    </div>
+  </div>
+</div>
+
+<!-- ── 토스트 ── -->
+<div id="toast"></div>
+
+<script>
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//  스플래시
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+const SPLASH = [
+  { screen: 'splash1', textEl: 'splash1-text', cursor: 'splash1-cursor', progress: 'splash1-progress', msg: '좋은 날도 궂은 날도,\n다 거름이 되어 나를 자라게 했다' },
+  { screen: 'splash2', textEl: 'splash2-text', cursor: 'splash2-cursor', progress: 'splash2-progress', msg: '내가 살아온 일흔 해를\n천천히 돌아봅니다' },
+];
+
+let splashIndex = 0;
+let splashTypingTimer = null;
+let splashHoldTimer = null;
+let splashSkipped = false;
+
+function startSplash() {
+  splashIndex = 0;
+  splashSkipped = false;
+  runSplash(0);
+}
+
+function runSplash(idx) {
+  if (idx >= SPLASH.length) { goScreen('cover'); return; }
+
+  const s = SPLASH[idx];
+  goScreen(s.screen);
+
+  const textEl = document.getElementById(s.textEl);
+  const cursorEl = document.getElementById(s.cursor);
+  const progressEl = document.getElementById(s.progress);
+
+  textEl.textContent = '';
+  cursorEl.style.display = 'inline-block';
+  progressEl.style.width = '0%';
+  progressEl.style.transition = 'none';
+
+  const msg = s.msg;
+  const holdTime = 1400;
+  let i = 0;
+  splashSkipped = false;
+
+  function typeChar() {
+    if (splashSkipped) return;
+    if (i < msg.length) {
+      textEl.textContent = msg.slice(0, i + 1);
+      i++;
+      progressEl.style.transition = 'none';
+      progressEl.style.width = (i / msg.length * 100) + '%';
+      // 줄바꿈 앞뒤는 길게, 나머지는 랜덤 부드러운 속도
+      const ch = msg[i - 1];
+      const next = msg[i] || '';
+      let delay;
+      if (ch === '\n') delay = 320;           // 줄바꿈 후 잠시 쉬기
+      else if (ch === ',' || ch === '.') delay = 160 + Math.random() * 60;
+      else delay = 70 + Math.random() * 55;   // 기본: 70~125ms
+      splashTypingTimer = setTimeout(typeChar, delay);
+    } else {
+      // 타이핑 완료 — 커서 멈추고 대기
+      cursorEl.style.animation = 'none';
+      cursorEl.style.opacity = '0';
+      splashHoldTimer = setTimeout(() => {
+        if (!splashSkipped) {
+          splashIndex = idx + 1;
+          fadeOutSplash(s.screen, () => runSplash(idx + 1));
+        }
+      }, holdTime);
+    }
+  }
+
+  splashTypingTimer = setTimeout(typeChar, 300);
+}
+
+function fadeOutSplash(screenId, cb) {
+  const el = document.getElementById('screen-' + screenId);
+  el.style.transition = 'opacity 0.5s';
+  el.style.opacity = '0';
+  setTimeout(() => {
+    el.style.opacity = '';
+    el.style.transition = '';
+    cb();
+  }, 500);
+}
+
+function skipSplash() {
+  splashSkipped = true;
+  clearTimeout(splashTypingTimer);
+  clearTimeout(splashHoldTimer);
+
+  const s = SPLASH[splashIndex];
+  if (!s) { goScreen('cover'); return; }
+
+  // 현재 스플래시가 타이핑 중이면 → 문장 완성만
+  const textEl = document.getElementById(s.textEl);
+  if (textEl.textContent.length < s.msg.length) {
+    textEl.textContent = s.msg;
+    const cursor = document.getElementById(s.cursor);
+    cursor.style.animation = 'none';
+    cursor.style.opacity = '0';
+    document.getElementById(s.progress).style.width = '100%';
+    splashSkipped = false;
+    splashHoldTimer = setTimeout(() => {
+      splashIndex++;
+      fadeOutSplash(s.screen, () => runSplash(splashIndex));
+    }, 600);
+  } else {
+    // 이미 완성된 상태 → 바로 다음
+    splashIndex++;
+    fadeOutSplash(s.screen, () => runSplash(splashIndex));
+  }
+}
+
+// 페이지 로드 시 Firebase 동기화 + 스플래시 시작
+window.addEventListener('DOMContentLoaded', () => {
+  // localStorage 캐시 먼저 읽어두기 (오프라인 대비)
+  try { localCache = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch(e) {}
+  initFirebaseSync();
+  startSplash();
+});
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//  데이터
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+const CHAPTERS = [
+  {
+    id: 'c1',
+    num: '01',
+    sub: '첫 싹',
+    title: '어린 시절',
+    desc: '태어난 곳, 부모님, 형제와 친구들에 대한 기억',
+    intro: '가장 처음의 기억부터 천천히 꺼내볼게요.\n정확하지 않아도 괜찮습니다.\n떠오르는 장면 하나면 충분해요.',
+    questions: [
+      { q: '어디서 태어나고 자라셨어요?\n그 동네는 지금도 눈에 그려지시나요?', hint: '충청도 작은 읍내에서 태어났어요. 지금도 눈 감으면 동네 어귀 느티나무가 보여요.' },
+      { q: '어린 시절, 가장 또렷하게 남아있는 장면 하나를 꼽으면 무엇인가요?', hint: '여름방학에 형이랑 냇가에서 물고기 잡던 날이 아직도 생생하네요.' },
+      { q: '그 시절 부모님은 어떤 분이셨어요?', hint: '아버지는 말씀이 적은 분이셨고, 어머니는 늘 새벽같이 일어나 부지런하셨어요.' },
+      { q: '형제자매나 친구들과는 무엇을 하며 놀았나요?', hint: '형제들이랑 자치기, 구슬치기 하면서 해 지는 줄 모르고 놀았죠.' },
+      { q: '그때 가장 좋아했던 음식이나 물건, 장소가 있었나요?', hint: '어머니가 해주신 부침개 냄새가 아직도 코끝에 남아있어요.' },
+      { q: '평생 변하지 않았던 나의 성격이나 습관이 있다면,\n그 뿌리는 이 시절에 있었을까요?', hint: '뭐든 끝까지 해내려는 고집은 그때부터 있었던 것 같아요.' },
+      { q: '어릴 적, 커서 무엇이 되고 싶다고 생각했나요?', hint: '막연히 손으로 뭔가 만드는 사람이 되고 싶었던 것 같아요.' },
+    ]
+  },
+  {
+    id: 'c2',
+    num: '02',
+    sub: '뻗어가던 가지',
+    title: '청년 시절',
+    desc: '학창 시절부터 처음 사회에 나갔던 청년의 이야기',
+    intro: '스무 살 즈음의 당신은 어떤 사람이었나요.\n꿈, 고민, 친구들…\n그때의 풍경을 함께 떠올려봐요.',
+    questions: [
+      { q: '학창 시절은 어땠나요?\n어떤 학생이었어요?', hint: '공부보다는 친구들이랑 어울리는 걸 더 좋아하는 학생이었어요.' },
+      { q: '그 시절 가장 큰 고민이나 꿈은 무엇이었나요?', hint: '빨리 어른이 돼서 내 힘으로 살아보고 싶다는 생각뿐이었어요.' },
+      { q: '처음 사회에 나가서 한 일은 무엇이었나요?', hint: '작은 공방에서 견습생으로 시작했어요. 그땐 정말 막막했죠.' },
+      { q: '그 시절 가장 친했던 친구는 누구였고,\n어떤 추억이 있나요?', hint: '같은 동네 살던 친구랑 매일 붙어다녔는데, 지금도 가끔 연락해요.' },
+      { q: '인생에서 가장 중요하게 여겨온 가치나 원칙은\n언제부터 생긴 건가요?', hint: '"정직하게 일하자"는 그때 사장님께 배운 말이 평생 갔어요.' },
+      { q: '그때의 나에게 지금 해주고 싶은 말이 있다면요?', hint: '너무 조급해하지 말라고, 다 잘 될 거라고 말해주고 싶어요.' },
+      { q: '지금 생각하면 가장 그리운 그 시절의 풍경은 무엇인가요?', hint: '퇴근길에 보던 노을이 유난히 예뻤던 게 생각나요.' },
+    ]
+  },
+  {
+    id: 'c3',
+    num: '03',
+    sub: '맞닿은 뿌리',
+    title: '결혼과 가정',
+    desc: '어머님과의 만남, 결혼, 아이들과 함께한 시간',
+    intro: '혼자가 아닌 함께가 된 시간입니다.\n가족과 함께한 소중한 장면들을\n편하게 나눠주세요.',
+    questions: [
+      { q: '어머님과는 어떻게 처음 만나셨어요?\n그때 어떤 느낌이셨나요?', hint: '친구 소개로 만났는데, 첫인상이 참 야무져 보였어요.' },
+      { q: '"이 사람과 함께 살아가야겠다" 싶었던 순간이 있었나요?', hint: '힘든 얘기를 털어놨을 때 끝까지 들어주던 모습에 마음을 굳혔어요.' },
+      { q: '결혼하고 처음 맞은 집은 어떤 모습이었나요?', hint: '방 한 칸짜리 작은 집이었지만 둘이라 든든했어요.' },
+      { q: '아이들이 태어났을 때,\n그 순간 어떤 마음이셨어요?', hint: '손이 너무 작아서, 만지는 것도 조심스러웠던 기억이 나요.' },
+      { q: '가족과 함께 보낸 시간 중\n가장 또렷하게 남아있는 장면은 무엇인가요?', hint: '다 같이 처음 바다 보러 갔던 여름이 아직도 선명해요.' },
+      { q: '가장으로 살아오면서 가장 버거웠던 시기는 언제였고,\n무엇이 그 시간을 견디게 해주었나요?', hint: '일이 힘들 때마다 집에 돌아오면 아이들 웃는 얼굴이 힘이 됐어요.' },
+      { q: '다른 사람들은 잘 모르는,\n가족만 아는 나의 모습이 있다면요?', hint: '밖에서는 무뚝뚝해도 집에서는 잔걱정이 많은 편이에요.' },
+      { q: '지금의 가족을 보면 어떤 생각이 드세요?', hint: '다들 잘 자라줘서 그저 고맙다는 생각뿐이에요.' },
+    ]
+  },
+  {
+    id: 'c4',
+    num: '04',
+    sub: '손끝으로 새긴 결',
+    title: '일과 가구',
+    desc: '일하며 배운 것과 손으로 만들어온 시간',
+    intro: '나무를 만지듯, 일을 대하는 마음을 이야기해주세요.\n손으로 새겨온 시간들이 있을 거예요.',
+    questions: [
+      { q: '처음 직장 생활을 시작했을 때, 어떤 마음이셨어요?', hint: '모든 게 서툴렀지만 빨리 배우고 싶은 마음이 컸어요.' },
+      { q: '일을 하면서 가장 자랑스러웠던 순간은 언제인가요?', hint: '내가 만든 가구를 누군가 마음에 들어 할 때, 그게 제일 뿌듯했어요.' },
+      { q: '가구 디자인에 관심을 갖게 된 계기가 있나요?', hint: '나무 다루는 일을 어깨너머로 배우다 보니 점점 빠져들었어요.' },
+      { q: '가장 만들어보고 싶었던 가구나 디자인이 있다면\n무엇인가요?', hint: '가족이 다 같이 둘러앉을 수 있는 큰 식탁을 만들어보고 싶었어요.' },
+      { q: '일을 하면서 가장 크게 배운 것은 무엇인가요?', hint: '서두르면 꼭 티가 난다는 걸, 나무를 만지면서 배웠어요.' },
+      { q: '후배나 자식들에게\n일에 대해 해주고 싶은 말이 있다면요?', hint: '기본을 탄탄히 하면 어떤 일이든 흔들리지 않는다고 말해주고 싶어요.' },
+    ]
+  },
+  {
+    id: 'c5',
+    num: '05',
+    sub: '굵어진 마디',
+    title: '인생의 전환점',
+    desc: '삶을 바꾼 선택들과 그 시절을 지나온 이야기',
+    intro: '살다 보면 마디가 굵어지는 순간들이 있어요.\n그 시간들이 당신을 어떻게 만들어왔는지\n이야기해주세요.',
+    questions: [
+      { q: '지금까지 살면서 가장 큰 결정을 내려야 했던 순간은\n언제였나요?', hint: '다니던 직장을 그만두고 내 일을 시작하기로 했을 때가 가장 큰 결정이었어요.' },
+      { q: '가장 힘들었던 시기는 언제였고,\n무엇이 버티게 해주었나요?', hint: '사업이 안 풀리던 때가 있었는데, 가족 생각에 버텨냈어요.' },
+      { q: '인생에서 가장 운이 좋았다고 느꼈던 순간이 있다면요?', hint: '좋은 사람들을 만나서 도움을 받았던 순간들이 떠오르네요.' },
+      { q: '지금의 나를 만든 사람이나 사건이 있다면\n무엇인가요?', hint: '첫 스승님이 해주신 한마디가 지금도 마음에 남아있어요.' },
+      { q: '살면서 가장 후회 없이 잘했다고 생각하는\n선택은 무엇인가요?', hint: '가족을 우선으로 생각하며 살아온 건 후회 없어요.' },
+      { q: '그 시기를 지나고 나서,\n스스로 달라졌다고 느낀 점은 무엇인가요?', hint: '조급함이 줄고, 기다릴 줄 아는 사람이 된 것 같아요.' },
+      { q: '나이가 들면서\n새롭게 알게 된 나의 모습이 있다면요?', hint: '생각보다 작은 것에 행복을 느끼는 사람이더라고요.' },
+      { q: '다시 그 시절로 돌아간다면 바꾸고 싶은 게 있나요?', hint: '가족과 더 많은 시간을 보냈으면 좋았겠다 싶어요.' },
+    ]
+  },
+  {
+    id: 'c6',
+    num: '06',
+    sub: '푸름을 내어준 품',
+    title: '가족에게 남기는 말',
+    desc: '자식과 손주, 가족에게 남기고 싶은 마음',
+    intro: '마지막 챕터예요.\n가족에게 전하고 싶은 마음을 편하게 남겨주세요.\n어떤 말도 괜찮습니다.',
+    questions: [
+      { q: '자식들에게 가장 해주고 싶은 말은 무엇인가요?', hint: '너희가 행복한 게 내겐 제일 중요하다고 말해주고 싶어요.' },
+      { q: '손주들이 기억해줬으면 하는 모습이\n있다면요?', hint: '항상 웃으며 반겨주던 할아버지로 기억해줬으면 해요.' },
+      { q: '지금까지 살아오면서\n가장 감사한 사람은 누구인가요?', hint: '평생 곁을 지켜준 아내에게 제일 감사해요.' },
+      { q: '요즘 가장 행복하다고 느끼는 순간은 언제인가요?', hint: '가족들 다 같이 모여 밥 먹는 시간이 요즘 제일 좋아요.' },
+      { q: '앞으로 남은 인생에서 하고 싶은 일이 있나요?', hint: '손주들이랑 더 많은 시간을 보내고 싶어요.' },
+      { q: '스스로를 한마디로 표현한다면\n어떤 사람이라고 하시겠어요?', hint: '묵묵히 제 할 일 하는 사람이라고 하고 싶네요.' },
+      { q: '지금의 나에게, 또는 미래의 나에게\n해주고 싶은 말이 있다면요?', hint: '지금까지 잘 살아왔다고, 수고했다고 말해주고 싶어요.' },
+      { q: '우리 가족에게 마지막으로 전하고 싶은 한마디는 무엇인가요?', hint: '늘 고맙고, 사랑한다는 말을 전하고 싶어요.' },
+    ]
+  },
+];
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//  저장 (Firebase + localStorage 캐시)
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+const STORAGE_KEY = 'jaram_autobiography';
+let localCache = {};
+
+// 앱 시작 시 Firebase 실시간 동기화
+function initFirebaseSync() {
+  ANSWERS_REF.on('value', snapshot => {
+    localCache = snapshot.val() || {};
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(localCache));
+    // 현재 질문 화면이 열려있고 포커스 없을 때만 갱신
+    if (currentChapterId !== null) {
+      const ta = document.getElementById('q-answer');
+      if (document.activeElement !== ta) {
+        ta.value = getAnswer(currentChapterId, currentQIndex);
+        updateCharCount(ta.value.length);
+      }
+    }
+    if (document.getElementById('screen-chapters').classList.contains('active')) {
+      renderChapterList();
+    }
+  }, () => {
+    // 오프라인 시 localStorage 캐시 사용
+    try { localCache = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; }
+    catch(e) { localCache = {}; }
+  });
+}
+
+function loadAnswers() {
+  return localCache;
+}
+
+function saveAnswer(chapterId, qIndex, text) {
+  if (!localCache[chapterId]) localCache[chapterId] = {};
+  localCache[chapterId][String(qIndex)] = text;
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(localCache));
+
+  ANSWERS_REF.child(chapterId).child(String(qIndex)).set(text)
+    .catch(e => console.warn('Firebase 저장 실패, 로컬에만 저장됨:', e));
+}
+
+function getAnswer(chapterId, qIndex) {
+  return (localCache[chapterId] && localCache[chapterId][String(qIndex)]) || '';
+}
+
+function getChapterProgress(chapterId) {
+  const data = loadAnswers();
+  const ch = CHAPTERS.find(c => c.id === chapterId);
+  if (!ch) return { answered: 0, total: 0 };
+  const answered = ch.questions.filter((_, i) =>
+    data[chapterId] && data[chapterId][i] && data[chapterId][i].trim().length > 0
+  ).length;
+  return { answered, total: ch.questions.length };
+}
+
+function getTotalProgress() {
+  let answered = 0, total = 0;
+  CHAPTERS.forEach(ch => {
+    const p = getChapterProgress(ch.id);
+    answered += p.answered;
+    total += p.total;
+  });
+  return { answered, total };
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//  화면 전환
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+function goScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function goChapters() {
+  renderChapterList();
+  goScreen('chapters');
+}
+
+function goView() {
+  currentViewMode = 'written';
+  document.getElementById('toggle-written').classList.add('active');
+  document.getElementById('toggle-all').classList.remove('active');
+  renderView();
+  goScreen('view');
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//  목차
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+function renderChapterList() {
+  const list = document.getElementById('chapter-list');
+  list.innerHTML = '';
+
+  const tp = getTotalProgress();
+  document.getElementById('total-progress').textContent = tp.answered + ' / ' + tp.total + '개 완성';
+
+  CHAPTERS.forEach((ch, idx) => {
+    const p = getChapterProgress(ch.id);
+    const done = p.answered === p.total && p.total > 0;
+    const pct = p.total > 0 ? Math.round(p.answered / p.total * 100) : 0;
+
+    const card = document.createElement('div');
+    card.className = 'chapter-card' + (done ? ' done' : '');
+    card.onclick = () => showChapterIntro(ch.id);
+    card.innerHTML = `
+      <div class="chapter-num serif">${ch.num}</div>
+      <div class="chapter-info">
+        <div class="chapter-sub">${ch.sub}</div>
+        <div class="chapter-title-text">${ch.title}</div>
+        <div class="chapter-desc">${ch.desc}</div>
+      </div>
+      <div class="chapter-progress-wrap">
+        <span class="chapter-progress-label">${p.answered}/${p.total}</span>
+        <div class="chapter-progress-bar">
+          <div class="chapter-progress-fill" style="width:${pct}%"></div>
+        </div>
+      </div>
+    `;
+    list.appendChild(card);
+  });
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//  챕터 인트로
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+function showChapterIntro(chapterId) {
+  const ch = CHAPTERS.find(c => c.id === chapterId);
+  const idx = CHAPTERS.indexOf(ch);
+  document.getElementById('intro-num').textContent = ch.num;
+  document.getElementById('intro-sub').textContent = ch.sub;
+  document.getElementById('intro-title').textContent = ch.title;
+  document.getElementById('intro-text').textContent = ch.intro;
+  document.getElementById('intro-start-btn').onclick = () => {
+    closeChapterIntro();
+    enterChapter(chapterId, 0);
+  };
+  document.getElementById('chapter-intro-overlay').classList.add('open');
+}
+
+function closeChapterIntro() {
+  document.getElementById('chapter-intro-overlay').classList.remove('open');
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//  질문
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+let currentChapterId = null;
+let currentQIndex = 0;
+let autoSaveTimer = null;
+let firstSaveShown = false;
+
+function enterChapter(chapterId, startIndex) {
+  currentChapterId = chapterId;
+  currentQIndex = startIndex !== undefined ? startIndex : 0;
+  renderQuestion();
+  goScreen('question');
+}
+
+function renderQuestion() {
+  const ch = CHAPTERS.find(c => c.id === currentChapterId);
+  if (!ch) return;
+  const q = ch.questions[currentQIndex];
+  const total = ch.questions.length;
+
+  document.getElementById('q-chapter-label').textContent = ch.sub + ' — ' + ch.title;
+  document.getElementById('q-counter').textContent = (currentQIndex + 1) + ' / ' + total;
+  document.getElementById('q-progress-fill').style.width = ((currentQIndex + 1) / total * 100) + '%';
+  document.getElementById('q-text').textContent = q.q;
+  document.getElementById('q-hint').textContent = q.hint;
+
+  const answer = getAnswer(currentChapterId, currentQIndex);
+  const ta = document.getElementById('q-answer');
+  ta.value = answer;
+  updateCharCount(answer.length);
+  hideSaveDot();
+
+  const btnPrev = document.getElementById('btn-prev');
+  const btnNext = document.getElementById('btn-next');
+  btnPrev.disabled = currentQIndex === 0;
+
+  if (currentQIndex === total - 1) {
+    btnNext.textContent = '이 장 마치기 ✓';
+    btnNext.className = 'btn-nav btn-nav-done';
+    btnNext.onclick = finishChapter;
+  } else {
+    btnNext.textContent = '다음 →';
+    btnNext.className = 'btn-nav btn-nav-primary';
+    btnNext.onclick = nextQuestion;
+  }
+
+  resetMedia();
+  ta.focus();
+}
+
+function prevQuestion() {
+  if (currentQIndex > 0) { currentQIndex--; renderQuestion(); }
+}
+
+function nextQuestion() {
+  const ch = CHAPTERS.find(c => c.id === currentChapterId);
+  if (currentQIndex < ch.questions.length - 1) { currentQIndex++; renderQuestion(); }
+}
+
+function finishChapter() {
+  const chIdx = CHAPTERS.findIndex(c => c.id === currentChapterId);
+  const ch = CHAPTERS[chIdx];
+  const p = getChapterProgress(currentChapterId);
+  const isLast = chIdx === CHAPTERS.length - 1;
+
+  document.getElementById('complete-title').textContent = ch.title + ' 장 완료';
+  document.getElementById('complete-desc').textContent =
+    p.answered + '개의 이야기를 남기셨어요.\n수고 많으셨어요, 잘 저장해뒀어요.';
+
+  const nextBtn = document.getElementById('complete-next-btn');
+  if (isLast) {
+    nextBtn.textContent = '지금까지 쓴 이야기 보기';
+    nextBtn.onclick = () => { closeComplete(); goView(); };
+  } else {
+    const nextCh = CHAPTERS[chIdx + 1];
+    nextBtn.textContent = '다음 ' + nextCh.title + ' →';
+    nextBtn.onclick = () => { closeComplete(); showChapterIntro(nextCh.id); };
+  }
+
+  document.getElementById('complete-overlay').classList.add('open');
+}
+
+function closeComplete() {
+  document.getElementById('complete-overlay').classList.remove('open');
+}
+
+// 자동 저장
+let saveDotTimer;
+
+function onAnswerInput() {
+  const text = document.getElementById('q-answer').value;
+  updateCharCount(text.length);
+
+  clearTimeout(autoSaveTimer);
+  autoSaveTimer = setTimeout(() => {
+    saveAnswer(currentChapterId, currentQIndex, text);
+    showSaveDot();
+    if (!firstSaveShown && text.trim().length > 0) {
+      firstSaveShown = true;
+      toast('저장됐어요.\n창을 닫아도 사라지지 않아요.', 4500);
+    }
+  }, 800);
+}
+
+function updateCharCount(n) {
+  document.getElementById('char-count').textContent = n + '자';
+}
+
+function showSaveDot() {
+  const el = document.getElementById('save-dot');
+  el.classList.add('show');
+  clearTimeout(saveDotTimer);
+  saveDotTimer = setTimeout(() => el.classList.remove('show'), 2500);
+}
+
+function hideSaveDot() {
+  document.getElementById('save-dot').classList.remove('show');
+}
+
+window.addEventListener('beforeunload', () => {
+  if (currentChapterId !== null) {
+    const text = document.getElementById('q-answer').value;
+    saveAnswer(currentChapterId, currentQIndex, text);
+  }
+});
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//  모아보기
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+let currentViewMode = 'written';
+
+function setViewMode(mode) {
+  currentViewMode = mode;
+  document.getElementById('toggle-written').classList.toggle('active', mode === 'written');
+  document.getElementById('toggle-all').classList.toggle('active', mode === 'all');
+  renderView();
+}
+
+function renderView() {
+  const body = document.getElementById('view-body');
+  body.innerHTML = '';
+  const mediaData = loadMedia();
+
+  CHAPTERS.forEach((ch) => {
+    const qas = ch.questions.map((q, qi) => ({
+      q: q.q,
+      ans: getAnswer(ch.id, qi),
+      qi,
+      images: (mediaData[ch.id + '_' + qi] || []).filter(m => m.type === 'image')
+    }));
+
+    const filtered = currentViewMode === 'written'
+      ? qas.filter(qa => qa.ans.trim().length > 0 || qa.images.length > 0)
+      : qas;
+
+    if (currentViewMode === 'written' && filtered.length === 0) return;
+
+    const sec = document.createElement('div');
+    sec.className = 'view-chapter';
+    sec.innerHTML = `
+      <div class="view-chapter-header">
+        <span class="view-chapter-num serif">${ch.num}</span>
+        <span class="view-chapter-title serif">${ch.sub} — ${ch.title}</span>
+      </div>
+    `;
+
+    filtered.forEach(qa => {
+      const div = document.createElement('div');
+      div.className = 'view-qa';
+
+      const imagesHtml = qa.images.length > 0
+        ? `<div class="view-images">${qa.images.map(img => `<img src="${escHtml(img.src)}" alt="${escHtml(img.name)}" class="view-img">`).join('')}</div>`
+        : '';
+
+      const chId = ch.id;
+      div.innerHTML = `
+        <p class="view-question serif">Q. ${escHtml(qa.q)}</p>
+        ${qa.ans ? `<p class="view-answer">${escHtml(qa.ans)}</p>` : '<p class="view-empty">아직 답변이 없어요.</p>'}
+        ${imagesHtml}
+        <button class="btn-view-edit" onclick="enterChapter('${chId}', ${qa.qi}); goScreen('question');">수정하기</button>
+      `;
+      sec.appendChild(div);
+    });
+
+    body.appendChild(sec);
+  });
+
+  if (body.children.length === 0) {
+    body.innerHTML = '<p style="text-align:center;color:var(--text-muted);padding:3rem 0;font-family:\'Noto Serif KR\',serif;">아직 작성하신 이야기가 없어요.<br>챕터로 돌아가서 천천히 시작해보세요.</p>';
+  }
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//  내보내기
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+function buildFullText() {
+  let lines = [];
+  lines.push('자람 — 서일태의 이야기');
+  lines.push('푸름을 먹고 자란, 서일태의 시간');
+  lines.push('');
+  lines.push('좋은 날도 궂은 날도, 다 거름이 되어 나를 자라게 했다');
+  lines.push('');
+  lines.push('─'.repeat(40));
+  lines.push('');
+  CHAPTERS.forEach((ch, idx) => {
+    lines.push(`${ch.num}. ${ch.sub} — ${ch.title}`);
+    lines.push('');
+    ch.questions.forEach((q, qi) => {
+      const ans = getAnswer(ch.id, qi);
+      lines.push(`Q. ${q.q}`);
+      lines.push(ans || '(미작성)');
+      lines.push('');
+    });
+    lines.push('─'.repeat(40));
+    lines.push('');
+  });
+  return lines.join('\n');
+}
+
+function exportTxt() {
+  const text = buildFullText();
+  const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = '자람_서일태의이야기_' + new Date().toISOString().slice(0, 10) + '.txt';
+  a.click();
+  toast('글 파일로 저장했습니다');
+}
+
+function copyAll() {
+  const text = buildFullText();
+  navigator.clipboard.writeText(text).then(() => {
+    toast('전체 내용을 복사했습니다');
+  }).catch(() => {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    toast('전체 내용을 복사했습니다');
+  });
+}
+
+function printView() {
+  setViewMode('all');
+  setTimeout(() => window.print(), 200);
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//  미디어
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+const MEDIA_KEY = 'jaram_media';
+
+function loadMedia() {
+  try { return JSON.parse(localStorage.getItem(MEDIA_KEY)) || {}; } catch(e) { return {}; }
+}
+
+function saveMedia(data) {
+  try { localStorage.setItem(MEDIA_KEY, JSON.stringify(data)); } catch(e) {
+    toast('저장 공간이 부족합니다. 사진을 줄여보세요.');
+  }
+}
+
+function getMediaKey() { return currentChapterId + '_' + currentQIndex; }
+
+function handleMediaUpload(e) {
+  const files = Array.from(e.target.files);
+  if (!files.length) return;
+  const key = getMediaKey();
+  const data = loadMedia();
+  if (!data[key]) data[key] = [];
+
+  let pending = files.length;
+  files.forEach(file => {
+    const reader = new FileReader();
+    reader.onload = ev => {
+      data[key].push({ type: 'image', src: ev.target.result, name: file.name });
+      pending--;
+      if (pending === 0) { saveMedia(data); renderMediaGrid(); toast(files.length + '개 첨부됐어요'); }
+    };
+    reader.readAsDataURL(file);
+  });
+  e.target.value = '';
+}
+
+function renderMediaGrid() {
+  const key = getMediaKey();
+  const data = loadMedia();
+  const items = data[key] || [];
+  const grid = document.getElementById('media-grid');
+  grid.innerHTML = '';
+  items.forEach((item, idx) => {
+    const div = document.createElement('div');
+    div.className = 'media-thumb';
+    div.innerHTML = `<img src="${item.src}" alt="${item.name}"><button class="media-del" onclick="deleteMedia(${idx})">×</button>`;
+    grid.appendChild(div);
+  });
+}
+
+function deleteMedia(idx) {
+  const key = getMediaKey();
+  const data = loadMedia();
+  if (data[key]) { data[key].splice(idx, 1); saveMedia(data); renderMediaGrid(); }
+}
+
+function resetMedia() {
+  renderMediaGrid();
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//  유틸
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+function escHtml(str) {
+  return (str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+let toastTimer;
+function toast(msg, duration) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), duration || 2500);
+}
+
+document.getElementById('toast').addEventListener('click', () => {
+  clearTimeout(toastTimer);
+  document.getElementById('toast').classList.remove('show');
+});
+</script>
+</body>
+</html>
